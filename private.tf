@@ -41,7 +41,7 @@ resource "aws_security_group" "LB" {
 resource "aws_instance" "LB-1" {
     ami = "${lookup(var.amis, var.aws_region)}"
     availability_zone = "ap-south-1a"
-    instance_type = "m1.small"
+    instance_type = "t2.micro"
     key_name = "${var.aws_key_name}"
     vpc_security_group_ids = ["${aws_security_group.LB.id}"]
     subnet_id = "${aws_subnet.ap-south-1a-private.id}"

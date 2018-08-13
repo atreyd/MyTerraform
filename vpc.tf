@@ -85,7 +85,7 @@ resource "aws_instance" "nat" {
     source_dest_check = false
 
     tags {
-        Name = "VPC NAT"
+        Name = "VPC NAT Instance in Private subnet"
     }
 }
 
