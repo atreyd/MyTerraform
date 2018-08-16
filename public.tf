@@ -2,8 +2,8 @@
   VB Servers
 */
 resource "aws_security_group" "VB" {
-    name = "vpc_VB"
-    description = "Linux Machine- Jenkins and Ansible/Chef/Puppet/etc- To be used as CI and CD box"
+    name = "SG_Public VM"
+    description = "Security group for Instances in Public subnet"
 
     ingress {
         from_port = 80
@@ -38,11 +38,11 @@ resource "aws_security_group" "VB" {
     vpc_id = "${aws_vpc.default.id}"
 
     tags {
-        Name = "VBServerSG"
+        Name = "PubSubSG"
     }
 }
-resource "aws_instance" "VB-1" {
-    ami = "${lookup(var.amis, var.aws_region)}"
+resource "aws_instance" "Local_VM_Pub" {
+    ami = "${lookup(var.pub_ami, var.aws_region)}"
     availability_zone = "ap-south-1a"
     instance_type = "t2.micro"
     key_name = "${var.aws_key_name}"
@@ -59,13 +59,14 @@ resource "aws_instance" "VB-1" {
         sudo yum install java-1.8.0 -y
         sudo yum install jenkins -y
         sudo service jenkins start
+        sudo amazon-linux-extras install ansible2
         EOF
     tags {
-        Name = "VB Server 1"
+        Name = "Local_VM_Pub"
     }
 }
 
-resource "aws_eip" "VB-1" {
-    instance = "${aws_instance.VB-1.id}"
+resource "aws_eip" "Local_VM_Pub" {
+    instance = "${aws_instance.Local_VM_Pub.id}"
     vpc = true
 }

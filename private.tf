@@ -2,8 +2,8 @@
   Database Servers
 */
 resource "aws_security_group" "LB" {
-    name = "Child Local Machine"
-    description = "Linux Machine- Docker/Tomcat to run the artefact created by CI BOX in Public subnet"
+    name = "SG_Local VM"
+    description = "Security group for Instances in Private subnet"
 
     ingress {
         from_port = 22
@@ -34,12 +34,12 @@ resource "aws_security_group" "LB" {
     vpc_id = "${aws_vpc.default.id}"
 
     tags {
-        Name = "LocalVM"
+        Name = "PriSubSG"
     }
 }
 
-resource "aws_instance" "LB-1" {
-    ami = "${lookup(var.amis, var.aws_region)}"
+resource "aws_instance" "Local_VM_Pri" {
+    ami = "${lookup(var.pri_ami, var.aws_region)}"
     availability_zone = "ap-south-1a"
     instance_type = "t2.micro"
     key_name = "${var.aws_key_name}"
@@ -48,6 +48,6 @@ resource "aws_instance" "LB-1" {
     source_dest_check = false
 
     tags {
-        Name = "Local VM 1"
+        Name = "Local_VM_Pri"
     }
 }
