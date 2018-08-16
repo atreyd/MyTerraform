@@ -23,7 +23,18 @@ resource "aws_security_group" "VB" {
         protocol = "icmp"
         cidr_blocks = ["0.0.0.0/0"]
     }
-
+    egress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    egress {
+        from_port = 443
+        to_port = 443
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
     vpc_id = "${aws_vpc.default.id}"
 
     tags {
@@ -41,7 +52,7 @@ resource "aws_instance" "VB-1" {
     source_dest_check = false
 #    user_data = "${data.template_cloudinit_config.config.rendered}"
     user_data = <<-EOF
-        #!bin/bash
+        #!/bin/bash
         sudo yum update -y
         sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins.io/redhat/jenkins.repo
         sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
@@ -49,7 +60,6 @@ resource "aws_instance" "VB-1" {
         sudo yum install jenkins -y
         sudo service jenkins start
         EOF
-        
     tags {
         Name = "VB Server 1"
     }
