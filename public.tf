@@ -31,16 +31,17 @@ resource "aws_security_group" "VB" {
     }
 }
 
-resource "template_file" "user_data" {
-  template = "app_install.tpl"
-  vars {
-    cluster = "Jenkins"
-  }
-  lifecycle {
-    create_before_destroy = true
+data "template_cloudinit_config" "master" {
+  gzip          = true
+  base64_encode = true
+
+  # get master user_data
+  part {
+    filename     = "master.cfg"
+    content_type = "text/part-handler"
+    content      = "${data.template_file.userdata_master.rendered}"
   }
 }
-
 resource "aws_instance" "VB-1" {
     ami = "${lookup(var.amis, var.aws_region)}"
     availability_zone = "ap-south-1a"
@@ -50,8 +51,8 @@ resource "aws_instance" "VB-1" {
     subnet_id = "${aws_subnet.ap-south-1a-public.id}"
     associate_public_ip_address = true
     source_dest_check = false
-    user_data = "${template_file.user_data.rendered}"
-
+    user_data_base64 = "${data.template_cloudinit_config.master.rendered}"
+    
     tags {
         Name = "VB Server 1"
     }
