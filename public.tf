@@ -39,8 +39,17 @@ resource "aws_instance" "VB-1" {
     subnet_id = "${aws_subnet.ap-south-1a-public.id}"
     associate_public_ip_address = true
     source_dest_check = false
-    user_data = "${data.template_cloudinit_config.config.rendered}"
-
+#    user_data = "${data.template_cloudinit_config.config.rendered}"
+    user_data = <<-EOF
+        #!bin/bash
+        sudo yum update -y
+        sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins.io/redhat/jenkins.repo
+        sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+        sudo yum install java-1.8.0 -y
+        sudo yum install jenkins -y
+        sudo service jenkins start
+        EOF
+        
     tags {
         Name = "VB Server 1"
     }
