@@ -73,26 +73,32 @@ resource "aws_security_group" "nat" {
         Name = "NATSG"
     }
 }
-resource "aws_instance" "nat" {
-    ami = "ami-d783a9b8"
-    availability_zone = "ap-south-1a"
-    instance_type = "t2.micro"
-    key_name = "${var.aws_key_name}"
-    vpc_security_group_ids = ["${aws_security_group.nat.id}"]
-    subnet_id = "${aws_subnet.ap-south-1a-public.id}"
-    associate_public_ip_address = true
-    source_dest_check = false
 
-    tags {
-        Name = "VPC NAT Instance in Private subnet"
-    }
-}
+# resource "aws_instance" "nat" {
+#     ami = "ami-d783a9b8"
+#     availability_zone = "ap-south-1a"
+#     instance_type = "t2.micro"
+#     key_name = "${var.aws_key_name}"
+#     vpc_security_group_ids = ["${aws_security_group.nat.id}"]
+#     subnet_id = "${aws_subnet.ap-south-1a-public.id}"
+#     associate_public_ip_address = true
+#     source_dest_check = false
+
+#     tags {
+#         Name = "VPC NAT Instance in Private subnet"
+#     }
+# }
 
 resource "aws_eip" "nat" {
     instance = "${aws_instance.nat.id}"
     vpc = true
 }
 
+resource "aws_nat_gateway" "natgw" {
+    allocation_id = "${aws_eip.nat.id}"
+    subnet_id = "${aws_subnet.ap-south-1a-public.id}"
+
+}
 
 /*
   Public Subnet
@@ -145,7 +151,8 @@ resource "aws_route_table" "ap-south-1a-private" {
 
     route {
         cidr_block = "0.0.0.0/0"
-	instance_id = "${aws_instance.nat.id}"
+        nat_gateway_id = "${aws_nat_gateway.natgw.id}"
+        # instance_id = "${aws_instance.nat.id}"
     }
 
     tags {
