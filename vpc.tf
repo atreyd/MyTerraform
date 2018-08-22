@@ -89,13 +89,12 @@ resource "aws_security_group" "nat" {
 #     }
 # }
 
-resource "aws_eip" "nat" {
-    instance = "${aws_instance.nat.id}"
+resource "aws_eip" "natip" {
     vpc = true
 }
 
 resource "aws_nat_gateway" "natgw" {
-    allocation_id = "${aws_eip.nat.id}"
+    allocation_id = "${aws_eip.natip.id}"
     subnet_id = "${aws_subnet.ap-south-1a-public.id}"
 
 }
