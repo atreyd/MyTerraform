@@ -34,6 +34,7 @@ resource "aws_security_group" "VB" {
         to_port = 22
         protocol = "ssh"
         cidr_blocks = ["0.0.0.0/0"]    
+    }
     egress {
         from_port = 80
         to_port = 80
@@ -81,5 +82,4 @@ resource "aws_instance" "Local_VM_Pub" {
 resource "aws_eip" "Local_VM_Pub" {
     instance = "${aws_instance.Local_VM_Pub.id}"
     vpc = true
-}
 }
