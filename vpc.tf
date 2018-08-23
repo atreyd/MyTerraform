@@ -74,21 +74,6 @@ resource "aws_security_group" "nat" {
     }
 }
 
-# resource "aws_instance" "nat" {
-#     ami = "ami-d783a9b8"
-#     availability_zone = "ap-south-1a"
-#     instance_type = "t2.micro"
-#     key_name = "${var.aws_key_name}"
-#     vpc_security_group_ids = ["${aws_security_group.nat.id}"]
-#     subnet_id = "${aws_subnet.ap-south-1a-public.id}"
-#     associate_public_ip_address = true
-#     source_dest_check = false
-
-#     tags {
-#         Name = "VPC NAT Instance in Private subnet"
-#     }
-# }
-
 resource "aws_eip" "natip" {
     vpc = true
 }

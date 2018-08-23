@@ -23,6 +23,17 @@ resource "aws_security_group" "VB" {
         protocol = "icmp"
         cidr_blocks = ["0.0.0.0/0"]
     }
+    ingress {
+        from_port = 8080
+        to_port = 8080
+        protocol = "Custom TCP Rule"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress {
+        from_port = 22
+        to_port = 22
+        protocol = "ssh"
+        cidr_blocks = ["0.0.0.0/0"]    
     egress {
         from_port = 80
         to_port = 80
@@ -60,6 +71,7 @@ resource "aws_instance" "Local_VM_Pub" {
         sudo yum install jenkins -y
         sudo service jenkins start
         sudo amazon-linux-extras install ansible2
+        sudo yum install maven -y
         EOF
     tags {
         Name = "Local_VM_Pub"
