@@ -54,8 +54,8 @@ resource "aws_security_group" "VB" {
     }
 }
 resource "aws_instance" "Local_VM_Pub" {
-    ami = "${lookup(var.pub_ami, var.aws_region)}"
-    availability_zone = "ap-south-1a"
+    ami = "${lookup(var.AMIS.default, var.aws_region)}"
+    availability_zone = "${lookup(var.AZones.default)}"
     instance_type = "t2.micro"
     key_name = "${var.aws_key_name}"
     vpc_security_group_ids = ["${aws_security_group.VB.id}"]

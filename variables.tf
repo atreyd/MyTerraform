@@ -8,18 +8,31 @@ variable "aws_region" {
     default = "ap-south-1"
 }
 
-variable "pub_ami" {
-    description = "AMI to use for an instance running with Jenkins/Ansible in Public Subnet"
-    default = {
-        ap-south-1 = "ami-d783a9b8" # ubuntu 14.04 LTS
+# variable "pub_ami" {
+#     description = "AMI to use for an instance running with Jenkins/Ansible in Public Subnet"
+#     default = {
+#         ap-south-1 = "ami-d783a9b8" # ubuntu 14.04 LTS
+#     }
+# }
+
+# variable "pri_ami" {
+#     description = "AMI to use for an instance running with Docker Private Subnet"
+#     default = {
+#         ap-south-1 = "ami-5a8da735" # Linux Ami with Docker
+#     }
+# }
+
+variable "AMIS" {
+    type = "map"
+    default= {
+        "ap-south-1" = "ami-d783a9b8"
+        "ap-south-1" = "ami-5a8da735"
     }
 }
 
-variable "pri_ami" {
-    description = "AMI to use for an instance running with Docker Private Subnet"
-    default = {
-        ap-south-1 = "ami-5a8da735" # Linux Ami with Docker
-    }
+variable "AZones" {
+    default = ["ap-south-1a", "ap-south-1b"]
+  
 }
 
 variable "vpc_cidr" {
