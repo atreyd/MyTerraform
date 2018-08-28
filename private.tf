@@ -39,7 +39,7 @@ resource "aws_security_group" "LB" {
 }
 
 resource "aws_instance" "Local_VM_Pri" {
-    ami = "${lookup(var.AMIS, var.aws_region)}"
+    ami = "${lookup("my_amis", var.AMIS[2], var.aws_region)}"
     availability_zone = "${var.AZones[2]}"
     instance_type = "t2.micro"
     key_name = "${var.aws_key_name}"
