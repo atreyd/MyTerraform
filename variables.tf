@@ -25,8 +25,7 @@ variable "aws_region" {
 variable "AMIS" {
     type = "map"
     default= {
-        pub_ami = "ami-d783a9b8"
-        pri_ami = "ami-5a8da735"
+        "my_amis" = "ami-d783a9b8, ami-5a8da735"
     }
 }
 
